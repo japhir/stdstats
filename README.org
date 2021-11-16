@@ -5,7 +5,6 @@
 #+AUTHOR: Ilja J. Kocken
 #+DATE: 2019-08-23
 
-* r computational code                                  :nolatex:
 The supplementary code to the manuscript "Optimizing the use of carbonate
 standards to minimize uncertainties in clumped isotope data".
 

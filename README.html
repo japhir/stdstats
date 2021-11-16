@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-11-16 Tue 13:29 -->
+<!-- 2021-11-16 Tue 13:39 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Simulation and plotting code for "Optimizing the use of carbonate standards to minimize uncertainties in clumped isotope data"</title>
@@ -222,80 +222,94 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd985076">1. r computational code&#xa0;&#xa0;&#xa0;<span class="tag"><span class="nolatex">nolatex</span></span></a>
+<li><a href="#orgea3bc1b">1. install required packages</a></li>
+<li><a href="#org7b2beaa">2. optional packages</a></li>
+<li><a href="#org7dc8a69">3. load libraries</a></li>
+<li><a href="#orgcb6a702">4. multiple cores</a></li>
+<li><a href="#orgb6c6f4f">5. set up plotting theme</a></li>
+<li><a href="#orgc479f8e">6. set up stdinfo etc.</a>
 <ul>
-<li><a href="#orgcda99e3">1.1. install required packages</a></li>
-<li><a href="#orgd95daa7">1.2. optional packages</a></li>
-<li><a href="#orge5e81ab">1.3. load libraries</a></li>
-<li><a href="#org08f90cc">1.4. multiple cores</a></li>
-<li><a href="#org001a832">1.5. set up plotting theme</a></li>
-<li><a href="#orgb74ae05">1.6. set up stdinfo etc.</a>
-<ul>
-<li><a href="#orgde9f78c">1.6.1. setup axes</a></li>
+<li><a href="#org7b82d78">6.1. setup axes</a></li>
 </ul>
 </li>
-<li><a href="#org56608c2">1.7. calculate temperature sensitivity as a function of temperature</a>
+<li><a href="#org436c651">7. calculate temperature sensitivity as a function of temperature</a>
 <ul>
-<li><a href="#orgaacc8f3">1.7.1. temp_sens_pot</a></li>
+<li><a href="#org8c73fab">7.1. temp_sens_pot</a></li>
 </ul>
 </li>
-<li><a href="#orge62b06b">1.8. create standard intro plot</a></li>
-<li><a href="#org1e6aa6f">1.9. micro benchmark</a></li>
-<li><a href="#orge9a9c75">1.10. example sims</a></li>
-<li><a href="#org9ede5e6">1.11. stddis</a>
+<li><a href="#orgc4bfe0c">8. create standard intro plot</a></li>
+<li><a href="#org196af8b">9. micro benchmark</a></li>
+<li><a href="#orgf31564e">10. example sims</a></li>
+<li><a href="#orga0a7187">11. stddis</a>
 <ul>
-<li><a href="#org3508c51">1.11.1. create a list of all possible stddis combinations</a></li>
-<li><a href="#orge4c6643">1.11.2. expand the whole grid</a></li>
-<li><a href="#org742d4f4">1.11.3. stddis runall</a></li>
-<li><a href="#org64094a8">1.11.4. arrange results for plot</a></li>
-<li><a href="#org4eafd36">1.11.5. create barcharts for proportion axes</a></li>
-<li><a href="#org048fb36">1.11.6. stddis_pl</a></li>
-<li><a href="#org946fecd">1.11.7. prep text</a></li>
+<li><a href="#org605a22b">11.1. create a list of all possible stddis combinations</a></li>
+<li><a href="#org2c9899c">11.2. expand the whole grid</a></li>
+<li><a href="#orge1b1b55">11.3. stddis runall</a></li>
+<li><a href="#org6a00652">11.4. arrange results for plot</a></li>
+<li><a href="#orgfb84010">11.5. create barcharts for proportion axes</a></li>
+<li><a href="#org66a20a9">11.6. stddis_pl</a></li>
+<li><a href="#org9be6c44">11.7. prep text</a></li>
 </ul>
 </li>
-<li><a href="#org4ea8920">1.12. stdvssmp</a>
+<li><a href="#org72b12ce">12. stdvssmp</a>
 <ul>
-<li><a href="#orga86208c">1.12.1. setup</a></li>
-<li><a href="#org41574a7">1.12.2. run sims</a></li>
-<li><a href="#org037f6d9">1.12.3. save results</a></li>
-<li><a href="#org0e32d22">1.12.4. tidy it up</a></li>
-<li><a href="#orga1d7862">1.12.5. stdvssmp_pl</a></li>
-<li><a href="#org2055945">1.12.6. supplementary figure plot with all input standard deviations</a></li>
+<li><a href="#org2b83fda">12.1. setup</a></li>
+<li><a href="#org195116e">12.2. run sims</a></li>
+<li><a href="#org643a1c0">12.3. save results</a></li>
+<li><a href="#org7d8d61f">12.4. tidy it up</a></li>
+<li><a href="#orgccb99f6">12.5. stdvssmp_pl</a></li>
+<li><a href="#org4ee1e11">12.6. supplementary figure plot with all input standard deviations</a></li>
 </ul>
 </li>
-<li><a href="#org94f6300">1.13. prop-eth3</a>
+<li><a href="#orgb485cbc">13. prop-eth3</a>
 <ul>
-<li><a href="#orge5e7d48">1.13.1. prop-eth3 for continuous sample range</a></li>
-<li><a href="#org41d2dce">1.13.2. prop-eth3 expand experimental matrices and run simulations</a></li>
-<li><a href="#org12c86e3">1.13.3. smp_out_uu</a></li>
-<li><a href="#org0d1a97a">1.13.4. best_dat</a></li>
-<li><a href="#orgb187028">1.13.5. smp_out_comb</a></li>
-<li><a href="#orgb4ef0ab">1.13.6. prop_eth3_pl</a></li>
-<li><a href="#org2694914">1.13.7. best_prop_diff_pl</a></li>
-<li><a href="#org60ee404">1.13.8. calculate some summary statistics for use in-text</a></li>
+<li><a href="#org1f343af">13.1. prop-eth3 for continuous sample range</a></li>
+<li><a href="#org69f179d">13.2. prop-eth3 expand experimental matrices and run simulations</a>
+<ul>
+<li><a href="#org09b10ed">13.2.1. run many sims</a></li>
+<li><a href="#org5f304c0">13.2.2. save results</a></li>
 </ul>
 </li>
-<li><a href="#org9c2069b">1.14. prop-eth3 with a very very very cold and hot standard?</a>
+<li><a href="#orgabec9ec">13.3. smp_out_uu</a></li>
+<li><a href="#org9877141">13.4. best_dat</a></li>
+<li><a href="#orgea5580d">13.5. smp_out_comb</a></li>
+<li><a href="#org4811bce">13.6. prop_eth3_pl</a>
 <ul>
-<li><a href="#orgdbfe03a">1.14.1. prop-eth3 for continuous sample range</a></li>
-<li><a href="#org6de8fc3">1.14.2. prop-eth3 expand experimental matrices and run simulations</a></li>
-<li><a href="#orgeb12915">1.14.3. run many sims</a></li>
-<li><a href="#orgfe0f45c">1.14.4. brrr_best_dat</a></li>
-<li><a href="#org3f881b0">1.14.5. smp_out_comb</a></li>
-<li><a href="#orgfdb244e">1.14.6. prop_eth3_pl</a></li>
-<li><a href="#orgce62ae4">1.14.7. calculate some summary statistics for use in-text</a></li>
-<li><a href="#orga73ca6d">1.14.8. quick check on how much it matters if we add two hypothetical very large-range standards</a></li>
+<li><a href="#orgc07f49a">13.6.1. plot_best</a></li>
+<li><a href="#org96262ea">13.6.2. plot_prop</a></li>
+<li><a href="#orgdb4fdcf">13.6.3. combine and print</a></li>
+<li><a href="#orgc91fa36">13.6.4. 3d rayshader plot</a></li>
 </ul>
 </li>
+<li><a href="#org5ce65f0">13.7. best_prop_diff_pl</a></li>
+<li><a href="#orgf226732">13.8. calculate some summary statistics for use in-text</a></li>
+</ul>
+</li>
+<li><a href="#org376e66d">14. prop-eth3 with a very very very cold and hot standard?</a>
+<ul>
+<li><a href="#orgdd2b220">14.1. prop-eth3 for continuous sample range</a></li>
+<li><a href="#orga7f7cfa">14.2. prop-eth3 expand experimental matrices and run simulations</a></li>
+<li><a href="#org865e513">14.3. run many sims</a>
+<ul>
+<li><a href="#orgd5a673c">14.3.1. save results</a></li>
+</ul>
+</li>
+<li><a href="#org2793ce3">14.4. brrr_best_dat</a></li>
+<li><a href="#orgd2597bc">14.5. smp_out_comb</a></li>
+<li><a href="#org89671f8">14.6. prop_eth3_pl</a>
+<ul>
+<li><a href="#org57c861b">14.6.1. plot_best</a></li>
+<li><a href="#orgee16e5d">14.6.2. plot_prop</a></li>
+<li><a href="#org250f7f9">14.6.3. combine and print</a></li>
+</ul>
+</li>
+<li><a href="#orga231122">14.7. calculate some summary statistics for use in-text</a></li>
+<li><a href="#orge5240fc">14.8. quick check on how much it matters if we add two hypothetical very large-range standards</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-orgd985076" class="outline-2">
-<h2 id="orgd985076"><span class="section-number-2">1.</span> r computational code&#xa0;&#xa0;&#xa0;<span class="tag"><span class="nolatex">nolatex</span></span></h2>
-<div class="outline-text-2" id="text-1">
 <p>
 The supplementary code to the manuscript "Optimizing the use of carbonate
 standards to minimize uncertainties in clumped isotope data".
@@ -345,11 +359,10 @@ files to generate identical plots (see below).
 <pre class="src src-R">set.seed<span style="color: #000000;">(</span>1563435<span style="color: #000000;">)</span>
 </pre>
 </div>
-</div>
 
-<div id="outline-container-orgcda99e3" class="outline-3">
-<h3 id="orgcda99e3"><span class="section-number-3">1.1.</span> install required packages</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-orgea3bc1b" class="outline-2">
+<h2 id="orgea3bc1b"><span class="section-number-2">1.</span> install required packages</h2>
+<div class="outline-text-2" id="text-1">
 <p>
 Install all below packages. Some of them (e.g. <code>furrr</code>) rely on the dev version
 available on GitHub. Install them with
@@ -375,9 +388,9 @@ or point to the directory in which you downloaded the stdsim folder with
 </div>
 </div>
 
-<div id="outline-container-orgd95daa7" class="outline-3">
-<h3 id="orgd95daa7"><span class="section-number-3">1.2.</span> optional packages</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-org7b2beaa" class="outline-2">
+<h2 id="org7b2beaa"><span class="section-number-2">2.</span> optional packages</h2>
+<div class="outline-text-2" id="text-2">
 <p>
 I use this for my theme.
 </p>
@@ -389,9 +402,9 @@ I use this for my theme.
 </div>
 </div>
 
-<div id="outline-container-orge5e81ab" class="outline-3">
-<h3 id="orge5e81ab"><span class="section-number-3">1.3.</span> load libraries</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-org7dc8a69" class="outline-2">
+<h2 id="org7dc8a69"><span class="section-number-2">3.</span> load libraries</h2>
+<div class="outline-text-2" id="text-3">
 <p>
 We use the following packages for this project:
 </p>
@@ -412,9 +425,9 @@ library<span style="color: #000000;">(</span>stdsim<span style="color: #000000;"
 </div>
 </div>
 
-<div id="outline-container-org08f90cc" class="outline-3">
-<h3 id="org08f90cc"><span class="section-number-3">1.4.</span> multiple cores</h3>
-<div class="outline-text-3" id="text-1-4">
+<div id="outline-container-orgcb6a702" class="outline-2">
+<h2 id="orgcb6a702"><span class="section-number-2">4.</span> multiple cores</h2>
+<div class="outline-text-2" id="text-4">
 <p>
 run simulations on as many cores as possible. Note that I read somewhere that
 the random number generator gets less random when using multiple cores, but it
@@ -429,9 +442,9 @@ the results.
 </div>
 </div>
 
-<div id="outline-container-org001a832" class="outline-3">
-<h3 id="org001a832"><span class="section-number-3">1.5.</span> set up plotting theme</h3>
-<div class="outline-text-3" id="text-1-5">
+<div id="outline-container-orgb6c6f4f" class="outline-2">
+<h2 id="orgb6c6f4f"><span class="section-number-2">5.</span> set up plotting theme</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 We can use a different theme, but I like the one in the dev package <code>egg</code>.
 Install it or ignore this section of code.
@@ -444,9 +457,9 @@ Install it or ignore this section of code.
 </div>
 </div>
 
-<div id="outline-container-orgb74ae05" class="outline-3">
-<h3 id="orgb74ae05"><span class="section-number-3">1.6.</span> set up stdinfo etc.</h3>
-<div class="outline-text-3" id="text-1-6">
+<div id="outline-container-orgc479f8e" class="outline-2">
+<h2 id="orgc479f8e"><span class="section-number-2">6.</span> set up stdinfo etc.</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 This uses the default functions in stdsim to generate a tibble with standard
 and sample information. It doesn't add &delta;<sub>47</sub> values by default since they differ
@@ -463,13 +476,13 @@ eth.info$d47 <span style="color: #0000c0;">&lt;-</span> c<span style="color: #00
 </div>
 </div>
 
-<div id="outline-container-orgde9f78c" class="outline-4">
-<h4 id="orgde9f78c"><span class="section-number-4">1.6.1.</span> setup axes</h4>
+<div id="outline-container-org7b82d78" class="outline-3">
+<h3 id="org7b82d78"><span class="section-number-3">6.1.</span> setup axes</h3>
 </div>
 </div>
-<div id="outline-container-org56608c2" class="outline-3">
-<h3 id="org56608c2"><span class="section-number-3">1.7.</span> calculate temperature sensitivity as a function of temperature</h3>
-<div class="outline-text-3" id="text-1-7">
+<div id="outline-container-org436c651" class="outline-2">
+<h2 id="org436c651"><span class="section-number-2">7.</span> calculate temperature sensitivity as a function of temperature</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 Now we are interested in calculating the rate of change as a function of D47,
 so that we can calculate the change in temperature. So we take the derivative
@@ -509,9 +522,9 @@ for the actual function documentation.
 </p>
 </div>
 
-<div id="outline-container-orgaacc8f3" class="outline-4">
-<h4 id="orgaacc8f3"><span class="section-number-4">1.7.1.</span> temp_sens_pot</h4>
-<div class="outline-text-4" id="text-1-7-1">
+<div id="outline-container-org8c73fab" class="outline-3">
+<h3 id="org8c73fab"><span class="section-number-3">7.1.</span> temp_sens_pot</h3>
+<div class="outline-text-3" id="text-7-1">
 <p>
 Calculate the sensitivity of the temperature calibration at the relevant
 temperature range, so that we can add an estimate of uncertainty in the
@@ -599,7 +612,7 @@ temp_sens_pl
 </div>
 
 
-<div id="org1e514dd" class="figure">
+<div id="orgb548bcb" class="figure">
 <p><img src="imgs/sensplot_full.png" alt="sensplot_full.png" />
 </p>
 </div>
@@ -607,9 +620,9 @@ temp_sens_pl
 </div>
 </div>
 
-<div id="outline-container-orge62b06b" class="outline-3">
-<h3 id="orge62b06b"><span class="section-number-3">1.8.</span> create standard intro plot</h3>
-<div class="outline-text-3" id="text-1-8">
+<div id="outline-container-orgc4bfe0c" class="outline-2">
+<h2 id="orgc4bfe0c"><span class="section-number-2">8.</span> create standard intro plot</h2>
+<div class="outline-text-2" id="text-8">
 <p>
 The standards as a function of composition
 </p>
@@ -706,16 +719,16 @@ standards_pl
 </div>
 
 
-<div id="org7d9a7c1" class="figure">
+<div id="org97d2a2d" class="figure">
 <p><img src="imgs/standards.png" alt="standards.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1e6aa6f" class="outline-3">
-<h3 id="org1e6aa6f"><span class="section-number-3">1.9.</span> micro benchmark</h3>
-<div class="outline-text-3" id="text-1-9">
+<div id="outline-container-org196af8b" class="outline-2">
+<h2 id="org196af8b"><span class="section-number-2">9.</span> micro benchmark</h2>
+<div class="outline-text-2" id="text-9">
 <p>
 Calculate how long it takes for one simulation.
 </p>
@@ -731,9 +744,9 @@ tpersim
 </div>
 </div>
 
-<div id="outline-container-orge9a9c75" class="outline-3">
-<h3 id="orge9a9c75"><span class="section-number-3">1.10.</span> example sims</h3>
-<div class="outline-text-3" id="text-1-10">
+<div id="outline-container-orgf31564e" class="outline-2">
+<h2 id="orgf31564e"><span class="section-number-2">10.</span> example sims</h2>
+<div class="outline-text-2" id="text-10">
 <p>
 We create some example simulations for fig. 2.
 </p>
@@ -960,17 +973,17 @@ and the table for in the text:
 </div>
 </div>
 
-<div id="outline-container-org9ede5e6" class="outline-3">
-<h3 id="org9ede5e6"><span class="section-number-3">1.11.</span> stddis</h3>
-<div class="outline-text-3" id="text-1-11">
+<div id="outline-container-orga0a7187" class="outline-2">
+<h2 id="orga0a7187"><span class="section-number-2">11.</span> stddis</h2>
+<div class="outline-text-2" id="text-11">
 <p>
 To simulate the distribution of the standards we create a tibble of inputs for
 <code>sim_stds()</code>.
 </p>
 </div>
-<div id="outline-container-org3508c51" class="outline-4">
-<h4 id="org3508c51"><span class="section-number-4">1.11.1.</span> create a list of all possible stddis combinations</h4>
-<div class="outline-text-4" id="text-1-11-1">
+<div id="outline-container-org605a22b" class="outline-3">
+<h3 id="org605a22b"><span class="section-number-3">11.1.</span> create a list of all possible stddis combinations</h3>
+<div class="outline-text-3" id="text-11-1">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #505050; font-style: italic;"># </span><span style="color: #505050; font-style: italic;">the proportions we want each standard to get</span>
 pr <span style="color: #0000c0;">&lt;-</span> c<span style="color: #000000;">(</span>0, 1, 3, 9<span style="color: #000000;">)</span>
@@ -1008,9 +1021,9 @@ props_list <span style="color: #0000c0;">&lt;-</span> props <span style="color: 
 </div>
 </div>
 
-<div id="outline-container-orge4c6643" class="outline-4">
-<h4 id="orge4c6643"><span class="section-number-4">1.11.2.</span> expand the whole grid</h4>
-<div class="outline-text-4" id="text-1-11-2">
+<div id="outline-container-org2c9899c" class="outline-3">
+<h3 id="org2c9899c"><span class="section-number-3">11.2.</span> expand the whole grid</h3>
+<div class="outline-text-3" id="text-11-2">
 <div class="org-src-container">
 <pre class="src src-R">stddis <span style="color: #0000c0;">&lt;-</span> expand.grid<span style="color: #000000;">(</span>
     smpt = c<span style="color: #a8007f;">(</span>0, 40<span style="color: #a8007f;">)</span>,
@@ -1030,9 +1043,9 @@ megastddis <span style="color: #0000c0;">&lt;-</span> stddis<span style="color: 
 </div>
 </div>
 
-<div id="outline-container-org742d4f4" class="outline-4">
-<h4 id="org742d4f4"><span class="section-number-4">1.11.3.</span> stddis runall</h4>
-<div class="outline-text-4" id="text-1-11-3">
+<div id="outline-container-orge1b1b55" class="outline-3">
+<h3 id="orge1b1b55"><span class="section-number-3">11.3.</span> stddis runall</h3>
+<div class="outline-text-3" id="text-11-3">
 <p>
 Note that we use the package <code>future</code> so that we can show a progress bar and use
 multiple cores. One could also use <code>purrr::pmap_dfr()</code> which it's based on, here.
@@ -1086,9 +1099,9 @@ Restore the results from previous simulations.
 </div>
 </div>
 
-<div id="outline-container-org64094a8" class="outline-4">
-<h4 id="org64094a8"><span class="section-number-4">1.11.4.</span> arrange results for plot</h4>
-<div class="outline-text-4" id="text-1-11-4">
+<div id="outline-container-org6a00652" class="outline-3">
+<h3 id="org6a00652"><span class="section-number-3">11.4.</span> arrange results for plot</h3>
+<div class="outline-text-3" id="text-11-4">
 <p>
 We re-organize the dataframes and make a selection of the best results for 0
 and 40 degrees.
@@ -1150,9 +1163,9 @@ forplot_40 <span style="color: #0000c0;">&lt;-</span>
 </div>
 </div>
 
-<div id="outline-container-org4eafd36" class="outline-4">
-<h4 id="org4eafd36"><span class="section-number-4">1.11.5.</span> create barcharts for proportion axes</h4>
-<div class="outline-text-4" id="text-1-11-5">
+<div id="outline-container-orgfb84010" class="outline-3">
+<h3 id="orgfb84010"><span class="section-number-3">11.5.</span> create barcharts for proportion axes</h3>
+<div class="outline-text-3" id="text-11-5">
 <div class="org-src-container">
 <pre class="src src-R">forplot_0_x <span style="color: #0000c0;">&lt;-</span> forplot_0 <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
   distinct<span style="color: #000000;">(</span>expname, .keep_all = <span style="color: #005a5f; font-weight: bold;">TRUE</span><span style="color: #000000;">)</span> <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
@@ -1200,9 +1213,9 @@ x_40 <span style="color: #0000c0;">&lt;-</span> x_0 <span style="color: #000000;
 </div>
 </div>
 
-<div id="outline-container-org048fb36" class="outline-4">
-<h4 id="org048fb36"><span class="section-number-4">1.11.6.</span> stddis_pl</h4>
-<div class="outline-text-4" id="text-1-11-6">
+<div id="outline-container-org66a20a9" class="outline-3">
+<h3 id="org66a20a9"><span class="section-number-3">11.6.</span> stddis_pl</h3>
+<div class="outline-text-3" id="text-11-6">
 <div class="org-src-container">
 <pre class="src src-R">sub_vjust <span style="color: #0000c0;">&lt;-</span> -7
 sds <span style="color: #0000c0;">&lt;-</span> tibble<span style="color: #000000;">(</span>expname = <span style="color: #2544bb;">"1:0:9:1:0"</span>, sd = c<span style="color: #a8007f;">(</span>14, 25, 50<span style="color: #a8007f;">)</span>, smp = c<span style="color: #a8007f;">(</span>.006, .012, .027<span style="color: #a8007f;">)</span> + .003, hascoldstandard = <span style="color: #005a5f; font-weight: bold;">FALSE</span>, smpt = 0<span style="color: #000000;">)</span>
@@ -1288,7 +1301,7 @@ stddis_pl <span style="color: #0000c0;">&lt;-</span> x_0 + stddis_pl_0 + x_40 + 
 </div>
 
 
-<div id="org00e9f49" class="figure">
+<div id="org4f817be" class="figure">
 <p><img src="imgs/stddis.png" alt="stddis.png" />
 </p>
 </div>
@@ -1296,9 +1309,9 @@ stddis_pl <span style="color: #0000c0;">&lt;-</span> x_0 + stddis_pl_0 + x_40 + 
 </div>
 
 
-<div id="outline-container-org946fecd" class="outline-4">
-<h4 id="org946fecd"><span class="section-number-4">1.11.7.</span> prep text</h4>
-<div class="outline-text-4" id="text-1-11-7">
+<div id="outline-container-org9be6c44" class="outline-3">
+<h3 id="org9be6c44"><span class="section-number-3">11.7.</span> prep text</h3>
+<div class="outline-text-3" id="text-11-7">
 <p>
 This generates some dataframes so we can easily extract relevant averages for
 use in-text.
@@ -1321,16 +1334,16 @@ stddis_exmp_40 <span style="color: #0000c0;">&lt;-</span> forplot_40 <span style
 </div>
 </div>
 
-<div id="outline-container-org4ea8920" class="outline-3">
-<h3 id="org4ea8920"><span class="section-number-3">1.12.</span> stdvssmp</h3>
-<div class="outline-text-3" id="text-1-12">
+<div id="outline-container-org72b12ce" class="outline-2">
+<h2 id="org72b12ce"><span class="section-number-2">12.</span> stdvssmp</h2>
+<div class="outline-text-2" id="text-12">
 <p>
 Here we simulate the standards versus samples based on three input distributions,
 </p>
 </div>
-<div id="outline-container-orga86208c" class="outline-4">
-<h4 id="orga86208c"><span class="section-number-4">1.12.1.</span> setup</h4>
-<div class="outline-text-4" id="text-1-12-1">
+<div id="outline-container-org2b83fda" class="outline-3">
+<h3 id="org2b83fda"><span class="section-number-3">12.1.</span> setup</h3>
+<div class="outline-text-3" id="text-12-1">
 <div class="org-src-container">
 <pre class="src src-R">stdvssmp <span style="color: #0000c0;">&lt;-</span> expand.grid<span style="color: #000000;">(</span>
   smpt = c<span style="color: #a8007f;">(</span>0, 40<span style="color: #a8007f;">)</span>, stdn = as.integer<span style="color: #a8007f;">(</span>seq<span style="color: #005f88;">(</span>12, 88, 4<span style="color: #005f88;">)</span><span style="color: #a8007f;">)</span>,
@@ -1353,9 +1366,9 @@ megastdvssmp <span style="color: #0000c0;">&lt;-</span> stdvssmp<span style="col
 </div>
 </div>
 
-<div id="outline-container-org41574a7" class="outline-4">
-<h4 id="org41574a7"><span class="section-number-4">1.12.2.</span> run sims</h4>
-<div class="outline-text-4" id="text-1-12-2">
+<div id="outline-container-org195116e" class="outline-3">
+<h3 id="org195116e"><span class="section-number-3">12.2.</span> run sims</h3>
+<div class="outline-text-3" id="text-12-2">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #505050; font-style: italic;"># </span><span style="color: #505050; font-style: italic;">again, I turn off plotting and info messages</span>
 options<span style="color: #000000;">(</span>genplot = <span style="color: #005a5f; font-weight: bold;">FALSE</span>, verbose = <span style="color: #005a5f; font-weight: bold;">FALSE</span><span style="color: #000000;">)</span>
@@ -1386,9 +1399,9 @@ message<span style="color: #000000;">(</span><span style="color: #2544bb;">"simu
 </div>
 </div>
 
-<div id="outline-container-org037f6d9" class="outline-4">
-<h4 id="org037f6d9"><span class="section-number-4">1.12.3.</span> save results</h4>
-<div class="outline-text-4" id="text-1-12-3">
+<div id="outline-container-org643a1c0" class="outline-3">
+<h3 id="org643a1c0"><span class="section-number-3">12.3.</span> save results</h3>
+<div class="outline-text-3" id="text-12-3">
 <div class="org-src-container">
 <pre class="src src-R">saveRDS<span style="color: #000000;">(</span>stdvssmp_cnf, <span style="color: #2544bb;">"stdvssmp_cnf_2019-06-13.rds"</span><span style="color: #000000;">)</span>
 </pre>
@@ -1401,9 +1414,9 @@ message<span style="color: #000000;">(</span><span style="color: #2544bb;">"simu
 </div>
 </div>
 
-<div id="outline-container-org0e32d22" class="outline-4">
-<h4 id="org0e32d22"><span class="section-number-4">1.12.4.</span> tidy it up</h4>
-<div class="outline-text-4" id="text-1-12-4">
+<div id="outline-container-org7d8d61f" class="outline-3">
+<h3 id="org7d8d61f"><span class="section-number-3">12.4.</span> tidy it up</h3>
+<div class="outline-text-3" id="text-12-4">
 <div class="org-src-container">
 <pre class="src src-R">tidy_stdvssmp_results <span style="color: #0000c0;">&lt;-</span> stdvssmp_cnf <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
   gather<span style="color: #000000;">(</span>errortype, error, sample, etf, smp<span style="color: #000000;">)</span>
@@ -1412,9 +1425,9 @@ message<span style="color: #000000;">(</span><span style="color: #2544bb;">"simu
 </div>
 </div>
 
-<div id="outline-container-orga1d7862" class="outline-4">
-<h4 id="orga1d7862"><span class="section-number-4">1.12.5.</span> stdvssmp_pl</h4>
-<div class="outline-text-4" id="text-1-12-5">
+<div id="outline-container-orgccb99f6" class="outline-3">
+<h3 id="orgccb99f6"><span class="section-number-3">12.5.</span> stdvssmp_pl</h3>
+<div class="outline-text-3" id="text-12-5">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #505050; font-style: italic;">## </span><span style="color: #505050; font-style: italic;">create label annotation because the legend with opacity was unclear</span>
 smpn=c<span style="color: #000000;">(</span>76, 44, 30<span style="color: #000000;">)</span>
@@ -1489,16 +1502,16 @@ stdvssmp_pl <span style="color: #0000c0;">&lt;-</span> ggplot<span style="color:
 </div>
 
 
-<div id="org36490fc" class="figure">
+<div id="org8cbcb09" class="figure">
 <p><img src="imgs/stdvssmp.png" alt="stdvssmp.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2055945" class="outline-4">
-<h4 id="org2055945"><span class="section-number-4">1.12.6.</span> supplementary figure plot with all input standard deviations</h4>
-<div class="outline-text-4" id="text-1-12-6">
+<div id="outline-container-org4ee1e11" class="outline-3">
+<h3 id="org4ee1e11"><span class="section-number-3">12.6.</span> supplementary figure plot with all input standard deviations</h3>
+<div class="outline-text-3" id="text-12-6">
 <p>
 we use a new package that allows different scales on different facets
 </p>
@@ -1562,7 +1575,7 @@ we use a new package that allows different scales on different facets
 </div>
 
 
-<div id="orgca49c9f" class="figure">
+<div id="org52f5a15" class="figure">
 <p><img src="imgs/stdvssmp_all.png" alt="stdvssmp_all.png" />
 </p>
 </div>
@@ -1570,16 +1583,16 @@ we use a new package that allows different scales on different facets
 </div>
 </div>
 
-<div id="outline-container-org94f6300" class="outline-3">
-<h3 id="org94f6300"><span class="section-number-3">1.13.</span> prop-eth3</h3>
-<div class="outline-text-3" id="text-1-13">
+<div id="outline-container-orgb485cbc" class="outline-2">
+<h2 id="orgb485cbc"><span class="section-number-2">13.</span> prop-eth3</h2>
+<div class="outline-text-2" id="text-13">
 <p>
 In the discussion we create a new set of simulations.
 </p>
 </div>
-<div id="outline-container-orge5e7d48" class="outline-4">
-<h4 id="orge5e7d48"><span class="section-number-4">1.13.1.</span> prop-eth3 for continuous sample range</h4>
-<div class="outline-text-4" id="text-1-13-1">
+<div id="outline-container-org1f343af" class="outline-3">
+<h3 id="org1f343af"><span class="section-number-3">13.1.</span> prop-eth3 for continuous sample range</h3>
+<div class="outline-text-3" id="text-13-1">
 <div class="org-src-container">
 <pre class="src src-R">new_smp_info2 <span style="color: #0000c0;">&lt;-</span> tibble<span style="color: #000000;">(</span>smpid = <span style="color: #2544bb;">"smp"</span>, smp_D47 = seq<span style="color: #a8007f;">(</span>0.18, 0.9, 0.0025<span style="color: #a8007f;">)</span><span style="color: #000000;">)</span> <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
   mutate<span style="color: #000000;">(</span>smp_D47.noacid = smp_D47 - kaff,
@@ -1591,9 +1604,9 @@ prop_eth3 <span style="color: #0000c0;">&lt;-</span> seq<span style="color: #000
 </div>
 </div>
 
-<div id="outline-container-org41d2dce" class="outline-4">
-<h4 id="org41d2dce"><span class="section-number-4">1.13.2.</span> prop-eth3 expand experimental matrices and run simulations</h4>
-<div class="outline-text-4" id="text-1-13-2">
+<div id="outline-container-org69f179d" class="outline-3">
+<h3 id="org69f179d"><span class="section-number-3">13.2.</span> prop-eth3 expand experimental matrices and run simulations</h3>
+<div class="outline-text-3" id="text-13-2">
 <div class="org-src-container">
 <pre class="src src-R">mat <span style="color: #0000c0;">&lt;-</span> expand.grid<span style="color: #000000;">(</span>smp_D47 = new_smp_info2$smp_D47, prop_eth3 = prop_eth3<span style="color: #000000;">)</span> <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
   left_join<span style="color: #000000;">(</span>new_smp_info2, by = <span style="color: #2544bb;">"smp_D47"</span><span style="color: #000000;">)</span> <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
@@ -1605,9 +1618,9 @@ prop_eth3 <span style="color: #0000c0;">&lt;-</span> seq<span style="color: #000
 </div>
 </div>
 
-<ol class="org-ol">
-<li><a id="org0551d91"></a>run many sims<br />
-<div class="outline-text-5" id="text-1-13-2-1">
+<div id="outline-container-org09b10ed" class="outline-4">
+<h4 id="org09b10ed"><span class="section-number-4">13.2.1.</span> run many sims</h4>
+<div class="outline-text-4" id="text-13-2-1">
 <div class="org-src-container">
 <pre class="src src-R">smp_out <span style="color: #0000c0;">&lt;-</span> furrr::future_pmap_dfr<span style="color: #000000;">(</span>
                     select<span style="color: #a8007f;">(</span>mat, stdfreqs, smpt<span style="color: #a8007f;">)</span>,
@@ -1623,10 +1636,11 @@ prop_eth3 <span style="color: #0000c0;">&lt;-</span> seq<span style="color: #000
 </pre>
 </div>
 </div>
-</li>
+</div>
 
-<li><a id="org76b4060"></a>save results<br />
-<div class="outline-text-5" id="text-1-13-2-2">
+<div id="outline-container-org5f304c0" class="outline-4">
+<h4 id="org5f304c0"><span class="section-number-4">13.2.2.</span> save results</h4>
+<div class="outline-text-4" id="text-13-2-2">
 <div class="org-src-container">
 <pre class="src src-R">saveRDS<span style="color: #000000;">(</span>smp_out, <span style="color: #2544bb;">"smp_out_new_2019-06-12.rds"</span><span style="color: #000000;">)</span>
 </pre>
@@ -1637,13 +1651,12 @@ prop_eth3 <span style="color: #0000c0;">&lt;-</span> seq<span style="color: #000
 </pre>
 </div>
 </div>
-</li>
-</ol>
+</div>
 </div>
 
-<div id="outline-container-org12c86e3" class="outline-4">
-<h4 id="org12c86e3"><span class="section-number-4">1.13.3.</span> smp_out_uu</h4>
-<div class="outline-text-4" id="text-1-13-3">
+<div id="outline-container-orgabec9ec" class="outline-3">
+<h3 id="orgabec9ec"><span class="section-number-3">13.3.</span> smp_out_uu</h3>
+<div class="outline-text-3" id="text-13-3">
 <div class="org-src-container">
 <pre class="src src-R">smp_out_uu <span style="color: #0000c0;">&lt;-</span>
   furrr::future_pmap_dfr<span style="color: #000000;">(</span>
@@ -1672,9 +1685,9 @@ prop_eth3 <span style="color: #0000c0;">&lt;-</span> seq<span style="color: #000
 </div>
 </div>
 
-<div id="outline-container-org0d1a97a" class="outline-4">
-<h4 id="org0d1a97a"><span class="section-number-4">1.13.4.</span> best_dat</h4>
-<div class="outline-text-4" id="text-1-13-4">
+<div id="outline-container-org9877141" class="outline-3">
+<h3 id="org9877141"><span class="section-number-3">13.4.</span> best_dat</h3>
+<div class="outline-text-3" id="text-13-4">
 <div class="org-src-container">
 <pre class="src src-R">best_range <span style="color: #0000c0;">&lt;-</span> 1:10
 
@@ -1687,9 +1700,9 @@ best_dat <span style="color: #0000c0;">&lt;-</span> bind_rows<span style="color:
 </div>
 </div>
 
-<div id="outline-container-orgb187028" class="outline-4">
-<h4 id="orgb187028"><span class="section-number-4">1.13.5.</span> smp_out_comb</h4>
-<div class="outline-text-4" id="text-1-13-5">
+<div id="outline-container-orgea5580d" class="outline-3">
+<h3 id="orgea5580d"><span class="section-number-3">13.5.</span> smp_out_comb</h3>
+<div class="outline-text-3" id="text-13-5">
 <p>
 combine the sims for one plot with faceting
 </p>
@@ -1704,15 +1717,19 @@ combine the sims for one plot with faceting
 </div>
 </div>
 
-<div id="outline-container-orgb4ef0ab" class="outline-4">
-<h4 id="orgb4ef0ab"><span class="section-number-4">1.13.6.</span> prop_eth3_pl</h4>
-<div class="outline-text-4" id="text-1-13-6">
+<div id="outline-container-org4811bce" class="outline-3">
+<h3 id="org4811bce"><span class="section-number-3">13.6.</span> prop_eth3_pl</h3>
+<div class="outline-text-3" id="text-13-6">
 </div>
-<ol class="org-ol">
-<li><a id="org2153fc5"></a>plot_best<br /></li>
-<li><a id="orgf61bce2"></a>plot_prop<br /></li>
-<li><a id="org74c8115"></a>combine and print<br />
-<div class="outline-text-5" id="text-1-13-6-3">
+<div id="outline-container-orgc07f49a" class="outline-4">
+<h4 id="orgc07f49a"><span class="section-number-4">13.6.1.</span> plot_best</h4>
+</div>
+<div id="outline-container-org96262ea" class="outline-4">
+<h4 id="org96262ea"><span class="section-number-4">13.6.2.</span> plot_prop</h4>
+</div>
+<div id="outline-container-orgdb4fdcf" class="outline-4">
+<h4 id="orgdb4fdcf"><span class="section-number-4">13.6.3.</span> combine and print</h4>
+<div class="outline-text-4" id="text-13-6-3">
 <div class="org-src-container">
 <pre class="src src-R">prop_eth3_pl <span style="color: #0000c0;">&lt;-</span> plot_best + plot_prop + plot_layout<span style="color: #000000;">(</span>nrow=2, heights=c<span style="color: #a8007f;">(</span>.2, .8<span style="color: #a8007f;">)</span><span style="color: #000000;">)</span>
 prop_eth3_pl
@@ -1720,16 +1737,17 @@ prop_eth3_pl
 </div>
 
 
-<div id="orgc18516e" class="figure">
+<div id="org9e26bf1" class="figure">
 <p><img src="imgs/prop_best.png" alt="prop_best.png" />
 </p>
 </div>
 </div>
-</li>
+</div>
 
 
-<li><a id="org203a262"></a>3d rayshader plot<br />
-<div class="outline-text-5" id="text-1-13-6-4">
+<div id="outline-container-orgc91fa36" class="outline-4">
+<h4 id="orgc91fa36"><span class="section-number-4">13.6.4.</span> 3d rayshader plot</h4>
+<div class="outline-text-4" id="text-13-6-4">
 <p>
 This one is not included in the manuscript or the supplementary information
 pdf, but I highly recommend creating one to play around with it!
@@ -1782,13 +1800,12 @@ See the screenshot for a preview
 <img src="imgs/rayshader_snapshot.png" alt="rayshader_snapshot.png" />
 </p>
 </div>
-</li>
-</ol>
+</div>
 </div>
 
-<div id="outline-container-org2694914" class="outline-4">
-<h4 id="org2694914"><span class="section-number-4">1.13.7.</span> best_prop_diff_pl</h4>
-<div class="outline-text-4" id="text-1-13-7">
+<div id="outline-container-org5ce65f0" class="outline-3">
+<h3 id="org5ce65f0"><span class="section-number-3">13.7.</span> best_prop_diff_pl</h3>
+<div class="outline-text-3" id="text-13-7">
 <p>
 The difference plot for the supplementary information.
 </p>
@@ -1872,16 +1889,16 @@ best_prop_diff_pl
 </div>
 
 
-<div id="org5d0f711" class="figure">
+<div id="orgd7520d3" class="figure">
 <p><img src="imgs/prop_diff.png" alt="prop_diff.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org60ee404" class="outline-4">
-<h4 id="org60ee404"><span class="section-number-4">1.13.8.</span> calculate some summary statistics for use in-text</h4>
-<div class="outline-text-4" id="text-1-13-8">
+<div id="outline-container-orgf226732" class="outline-3">
+<h3 id="orgf226732"><span class="section-number-3">13.8.</span> calculate some summary statistics for use in-text</h3>
+<div class="outline-text-3" id="text-13-8">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #505050; font-style: italic;"># </span><span style="color: #505050; font-style: italic;">these are some helper functions to calculate the values we put in the text</span>
 <span style="color: #505050; font-style: italic;"># </span><span style="color: #505050; font-style: italic;">get the confidence value at alpha value alpha from a t-distribution</span>
@@ -1954,16 +1971,16 @@ uu_to_0_tempsens <span style="color: #0000c0;">&lt;-</span> seq<span style="colo
 </div>
 </div>
 </div>
-<div id="outline-container-org9c2069b" class="outline-3">
-<h3 id="org9c2069b"><span class="section-number-3">1.14.</span> prop-eth3 with a very very very cold and hot standard?</h3>
-<div class="outline-text-3" id="text-1-14">
+<div id="outline-container-org376e66d" class="outline-2">
+<h2 id="org376e66d"><span class="section-number-2">14.</span> prop-eth3 with a very very very cold and hot standard?</h2>
+<div class="outline-text-2" id="text-14">
 <p>
 The reviewers requested another set of simulations.
 </p>
 </div>
-<div id="outline-container-orgdbfe03a" class="outline-4">
-<h4 id="orgdbfe03a"><span class="section-number-4">1.14.1.</span> prop-eth3 for continuous sample range</h4>
-<div class="outline-text-4" id="text-1-14-1">
+<div id="outline-container-orgdd2b220" class="outline-3">
+<h3 id="orgdd2b220"><span class="section-number-3">14.1.</span> prop-eth3 for continuous sample range</h3>
+<div class="outline-text-3" id="text-14-1">
 <p>
 same as before
 </p>
@@ -1978,9 +1995,9 @@ prop_eth3 <span style="color: #0000c0;">&lt;-</span> seq<span style="color: #000
 </div>
 </div>
 
-<div id="outline-container-org6de8fc3" class="outline-4">
-<h4 id="org6de8fc3"><span class="section-number-4">1.14.2.</span> prop-eth3 expand experimental matrices and run simulations</h4>
-<div class="outline-text-4" id="text-1-14-2">
+<div id="outline-container-orga7f7cfa" class="outline-3">
+<h3 id="orga7f7cfa"><span class="section-number-3">14.2.</span> prop-eth3 expand experimental matrices and run simulations</h3>
+<div class="outline-text-3" id="text-14-2">
 <p>
 same as before
 </p>
@@ -1996,9 +2013,9 @@ same as before
 </div>
 </div>
 
-<div id="outline-container-orgeb12915" class="outline-4">
-<h4 id="orgeb12915"><span class="section-number-4">1.14.3.</span> run many sims</h4>
-<div class="outline-text-4" id="text-1-14-3">
+<div id="outline-container-org865e513" class="outline-3">
+<h3 id="org865e513"><span class="section-number-3">14.3.</span> run many sims</h3>
+<div class="outline-text-3" id="text-14-3">
 <div class="org-src-container">
 <pre class="src src-R">brrr <span style="color: #0000c0;">&lt;-</span> make_std_table<span style="color: #000000;">(</span>id = c<span style="color: #a8007f;">(</span><span style="color: #2544bb;">"UU2"</span>, <span style="color: #2544bb;">"UU3"</span><span style="color: #a8007f;">)</span>, col = c<span style="color: #a8007f;">(</span><span style="color: #2544bb;">"darkblue"</span>, <span style="color: #2544bb;">"red"</span><span style="color: #a8007f;">)</span>,
                D47_std = c<span style="color: #a8007f;">(</span>0.9252, 0.0266<span style="color: #a8007f;">)</span><span style="color: #000000;">)</span> <span style="color: #505050; font-style: italic;"># </span><span style="color: #505050; font-style: italic;">based on Wang 2004</span>
@@ -2018,9 +2035,9 @@ brrr_smp_out <span style="color: #0000c0;">&lt;-</span> furrr::future_pmap_dfr<s
 </div>
 </div>
 
-<ol class="org-ol">
-<li><a id="org2ede3b4"></a>save results<br />
-<div class="outline-text-5" id="text-1-14-3-1">
+<div id="outline-container-orgd5a673c" class="outline-4">
+<h4 id="orgd5a673c"><span class="section-number-4">14.3.1.</span> save results</h4>
+<div class="outline-text-4" id="text-14-3-1">
 <div class="org-src-container">
 <pre class="src src-R">saveRDS<span style="color: #000000;">(</span>brrr_smp_out, <span style="color: #2544bb;">"brrr_smp_out_2019-08-20.rds"</span><span style="color: #000000;">)</span>
 </pre>
@@ -2042,13 +2059,12 @@ The heated/eq. gas equivalents
 </pre>
 </div>
 </div>
-</li>
-</ol>
+</div>
 </div>
 
-<div id="outline-container-orgfe0f45c" class="outline-4">
-<h4 id="orgfe0f45c"><span class="section-number-4">1.14.4.</span> brrr_best_dat</h4>
-<div class="outline-text-4" id="text-1-14-4">
+<div id="outline-container-org2793ce3" class="outline-3">
+<h3 id="org2793ce3"><span class="section-number-3">14.4.</span> brrr_best_dat</h3>
+<div class="outline-text-3" id="text-14-4">
 <div class="org-src-container">
 <pre class="src src-R">best_range <span style="color: #0000c0;">&lt;-</span> 1:10
 
@@ -2061,9 +2077,9 @@ brrr_best_dat <span style="color: #0000c0;">&lt;-</span> bind_rows<span style="c
 </div>
 </div>
 
-<div id="outline-container-org3f881b0" class="outline-4">
-<h4 id="org3f881b0"><span class="section-number-4">1.14.5.</span> smp_out_comb</h4>
-<div class="outline-text-4" id="text-1-14-5">
+<div id="outline-container-orgd2597bc" class="outline-3">
+<h3 id="orgd2597bc"><span class="section-number-3">14.5.</span> smp_out_comb</h3>
+<div class="outline-text-3" id="text-14-5">
 <p>
 combine the sims for one plot with faceting
 </p>
@@ -2077,15 +2093,19 @@ combine the sims for one plot with faceting
 </div>
 </div>
 
-<div id="outline-container-orgfdb244e" class="outline-4">
-<h4 id="orgfdb244e"><span class="section-number-4">1.14.6.</span> prop_eth3_pl</h4>
-<div class="outline-text-4" id="text-1-14-6">
+<div id="outline-container-org89671f8" class="outline-3">
+<h3 id="org89671f8"><span class="section-number-3">14.6.</span> prop_eth3_pl</h3>
+<div class="outline-text-3" id="text-14-6">
 </div>
-<ol class="org-ol">
-<li><a id="orgce6dcb4"></a>plot_best<br /></li>
-<li><a id="org5ee312e"></a>plot_prop<br /></li>
-<li><a id="org999b6a4"></a>combine and print<br />
-<div class="outline-text-5" id="text-1-14-6-3">
+<div id="outline-container-org57c861b" class="outline-4">
+<h4 id="org57c861b"><span class="section-number-4">14.6.1.</span> plot_best</h4>
+</div>
+<div id="outline-container-orgee16e5d" class="outline-4">
+<h4 id="orgee16e5d"><span class="section-number-4">14.6.2.</span> plot_prop</h4>
+</div>
+<div id="outline-container-org250f7f9" class="outline-4">
+<h4 id="org250f7f9"><span class="section-number-4">14.6.3.</span> combine and print</h4>
+<div class="outline-text-4" id="text-14-6-3">
 <div class="org-src-container">
 <pre class="src src-R">brrr_prop_eth3_pl <span style="color: #0000c0;">&lt;-</span> brrr_plot_best + brrr_plot_prop + plot_layout<span style="color: #000000;">(</span>nrow=2, heights=c<span style="color: #a8007f;">(</span>.2, .8<span style="color: #a8007f;">)</span><span style="color: #000000;">)</span>
 brrr_prop_eth3_pl
@@ -2093,18 +2113,17 @@ brrr_prop_eth3_pl
 </div>
 
 
-<div id="org67bf132" class="figure">
+<div id="orgaf8f860" class="figure">
 <p><img src="imgs/brrr_prop_best.png" alt="brrr_prop_best.png" />
 </p>
 </div>
 </div>
-</li>
-</ol>
+</div>
 </div>
 
-<div id="outline-container-orgce62ae4" class="outline-4">
-<h4 id="orgce62ae4"><span class="section-number-4">1.14.7.</span> calculate some summary statistics for use in-text</h4>
-<div class="outline-text-4" id="text-1-14-7">
+<div id="outline-container-orga231122" class="outline-3">
+<h3 id="orga231122"><span class="section-number-3">14.7.</span> calculate some summary statistics for use in-text</h3>
+<div class="outline-text-3" id="text-14-7">
 <div class="org-src-container">
 <pre class="src src-R">eth3_to_u2_eth3 <span style="color: #0000c0;">&lt;-</span> brrr_best_dat <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
   ungroup<span style="color: #000000;">()</span> <span style="color: #000000; background-color: #ffffff;">%&gt;%</span>
@@ -2158,9 +2177,9 @@ eth3_to_0_tempsens <span style="color: #0000c0;">&lt;-</span> seq<span style="co
 </div>
 </div>
 
-<div id="outline-container-orga73ca6d" class="outline-4">
-<h4 id="orga73ca6d"><span class="section-number-4">1.14.8.</span> quick check on how much it matters if we add two hypothetical very large-range standards</h4>
-<div class="outline-text-4" id="text-1-14-8">
+<div id="outline-container-orge5240fc" class="outline-3">
+<h3 id="orge5240fc"><span class="section-number-3">14.8.</span> quick check on how much it matters if we add two hypothetical very large-range standards</h3>
+<div class="outline-text-3" id="text-14-8">
 <div class="org-src-container">
 <pre class="src src-R"><span style="color: #000000;">(</span>eth3_to_0_eth3$mean - eth3_to_0_u2$mean<span style="color: #000000;">)</span> * 1000
 </pre>
@@ -2203,11 +2222,10 @@ or in terms of improvement:
 </div>
 </div>
 </div>
-</div>
 <div id="postamble" class="status">
 <p class="date">Date: 2019-08-23</p>
 <p class="author">Author: Ilja J. Kocken</p>
-<p class="date">Created: 2021-11-16 Tue 13:29</p>
+<p class="date">Created: 2021-11-16 Tue 13:39</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
