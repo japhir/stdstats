@@ -1,0 +1,48 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Simulation and plotting code for “Optimizing the use of
+  carbonate standards to minimize uncertainties in clumped
+  isotope data”
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Kocken
+    family-names: Ilja Japhir
+    orcid: 'https://orcid.org/0000-0003-2196-8718'
+    affiliation: Utrecht University
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.5707709
+    description: Zenodo
+repository-code: 'https://github.com/japhir/stdstats'
+repository: 'https://zenodo.org/record/5707709'
+abstract: >-
+  The supplementary code to the manuscript “Optimizing the
+  use of carbonate standards to minimize uncertainties in
+  clumped isotope data”.
+license: GPL-3.0-or-later
+date-released: '2021-09-17'
+references:
+  - authors:
+    - family-names: Kocken
+      given-names: Ilja J.
+    - family-names: Müller
+      given-names: Inigo A.
+    - family-names: Ziegler
+      given-names: Martin
+    type: article
+    title: Optimizing the use of carbonate standards to minimize uncertainties in clumped isotope data
+    journal: Geochemistry, Geophysics, Geosystems
+    year: 2019
+    volume: 20
+    issue: 11
+    pages: 5565--5577
+    doi: 10.1029/2019GC008545
+    issn: 1525-2027
+
+ 
