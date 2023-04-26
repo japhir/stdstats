@@ -2,6 +2,8 @@
 #+PROPERTY: header-args:R :session *R:standardstats* :tangle standardstats.R :comments org :eval no-export
 #+OPTIONS: ^:{}
 
+[[https://zenodo.org/badge/latestdoi/204010171][https://zenodo.org/badge/204010171.svg]]
+
 #+AUTHOR: Ilja J. Kocken
 #+DATE: 2019-08-23
 
